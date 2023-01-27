@@ -1,6 +1,6 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import Login from './src/pages/Login';
+import {SafeAreaView} from 'react-native';
+import Login from './src/pages/Login.jsx';
 
 function App(): JSX.Element {
   
