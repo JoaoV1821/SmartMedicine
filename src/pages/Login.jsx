@@ -1,18 +1,23 @@
 import React from "react";
-import { StyleSheet, Text, View, TextInput} from "react-native";
+import { withFormik} from "formik";
+import { StyleSheet, Text, View, TextInput, Alert} from "react-native";
 import AppButton from "../components/AppButton";
 import LogoEscura from "../components/Logo";
 
-const Login = () => {
+const Login = (props) => {
+
     return  (
         <>
             <LogoEscura/>
         
             <View style={style.container}>
+
                 <Text style={style.title}>Login</Text>
-                <TextInput style={style.input} placeholder='  Email'/>
-                <TextInput style={style.input} placeholder='  Senha' secureTextEntry={true} />
-                <AppButton style={style.button}title="Acessar"/>
+                <TextInput style={style.input} placeholder='Email' keyboardType="email-address" value={props.values.email} onChangeText={text => props.setFieldValue('email', text)}/>
+                <TextInput style={style.input} placeholder='Senha' secureTextEntry={true} value={props.values.senha} onChangeText={text => props.setFieldValue('senha', text)} />
+
+                <AppButton title="Acessar" onPress={props.handleSubmit}/>
+               
             </View>
             
             <View style={style.line}/>
@@ -31,7 +36,6 @@ const style = StyleSheet.create({
         width: "100%",
         height: "55%",
         marginTop: 70,
-        position: 'relative'
     },
    
     title : {
@@ -39,7 +43,7 @@ const style = StyleSheet.create({
         color: "#094275",
         fontSize: 24,
         fontWeight: 700,
-        marginTop: 20,
+        marginTop: 10,
         marginBottom: 30
     },
     
@@ -48,6 +52,7 @@ const style = StyleSheet.create({
         borderRadius: 20,
         width: 255,
         height: 47,
+        paddingLeft: 20
        
     },
 
@@ -77,4 +82,34 @@ const style = StyleSheet.create({
 
 });
 
-export default Login;
+export default withFormik({
+    mapPropsToValues: () => ({ email: '', senha: '' }),
+  
+    handleSubmit: (values) => {
+      if (values.email === ''  || values.email === null) {
+       Alert.alert('Digite seu Email!');
+
+      } else if (values.senha === '' || values.senha === null){
+
+        Alert.alert('Digite sua senha!');
+    
+      } else {
+
+        const emailRegex = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/, "gm");
+        const ehValido = emailRegex.test(values.email);
+
+            if(!ehValido) {
+                Alert.alert("Email inválido!");
+    
+            } else {
+                Alert.alert(values);
+            }
+
+        }
+       
+    }
+
+})(Login);
+
+
+
