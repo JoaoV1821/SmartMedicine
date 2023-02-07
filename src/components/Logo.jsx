@@ -13,7 +13,7 @@ const LogoEscura = () => {
 const style = StyleSheet.create({
     img : {
        left: 60,
-       top: 10
+       top: 40
     }
 })
 

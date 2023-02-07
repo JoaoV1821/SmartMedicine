@@ -1,5 +1,5 @@
 import React from "react";
-import { withFormik} from "formik";
+import { withFormik } from "formik";
 import { StyleSheet, Text, View, TextInput, Alert} from "react-native";
 import AppButton from "../components/AppButton";
 import LogoEscura from "../components/Logo";
@@ -21,7 +21,7 @@ const Login = (props) => {
             </View>
             
             <View style={style.line}/>
-            <Text style={style.smallText}>Não tem uma conta? Toque para criar uma</Text>
+            <Text style={style.smallText} onPress={() => props.navigation.navigate('Cadastro')}>Não tem uma conta? Toque para criar uma</Text>
         </>
     ) 
 }
@@ -34,7 +34,7 @@ const style = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         width: "100%",
-        height: "55%",
+        height: "50%",
         marginTop: 70,
     },
    
@@ -67,7 +67,7 @@ const style = StyleSheet.create({
     line: {
         borderBottomColor: '#717F7F',
         borderBottomWidth: 1,
-        marginTop: 90
+        marginTop: 100
      
     },
 
@@ -86,6 +86,9 @@ export default withFormik({
     mapPropsToValues: () => ({ email: '', senha: '' }),
   
     handleSubmit: (values) => {
+        values.email = values.email.trim();
+        values.senha = values.senha.trim();
+        
       if (values.email === ''  || values.email === null) {
        Alert.alert('Digite seu Email!');
 
@@ -102,7 +105,7 @@ export default withFormik({
                 Alert.alert("Email inválido!");
     
             } else {
-                Alert.alert(values);
+                console.warn(values);
             }
 
         }
