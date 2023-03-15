@@ -8,7 +8,7 @@ const Configuracoes = (props) => {
                 Configurações
             </Text>
 
-            <Text style={style.link}>Atualizar dados</Text>
+            <Text style={style.link} onPress={() => props.navigation.navigate('SubScreens',{ screen: 'Atualizacao' } )}>Atualizar dados</Text>
 
             <View style={style.container}>
                 <Text style={style.link}>Notificações</Text> 
@@ -16,11 +16,7 @@ const Configuracoes = (props) => {
                 <Switch></Switch>
             </View>
             
-
             <Text style={style.link}>Sobre</Text>
-
-            
-            
         </View>
     )
 }
@@ -46,5 +42,6 @@ const style = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center'
     }
-})
+});
+
 export default Configuracoes;

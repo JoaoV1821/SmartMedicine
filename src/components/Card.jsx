@@ -68,6 +68,7 @@ const style = StyleSheet.create({
         shadowOpacity: 0.9,
         elevation: 10,
         padding: 10,
+        marginTop: 10
     },
 
     container : {

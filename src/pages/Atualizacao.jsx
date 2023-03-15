@@ -1,15 +1,12 @@
 import React from "react";
 import { withFormik } from "formik";
-import { StyleSheet, Text, View, TextInput, Alert, Image } from "react-native";
+import { StyleSheet, Text, View, TextInput, Alert } from "react-native";
 import AppButton from "../components/AppButton";
-import LogoEscura from "../components/Logo";
-
 
 const Atualizacao = (props) => {
     return (
         <View style={style.body}>
-           <LogoEscura/>
-
+           
            <View style={style.container}>
                 <Text style={style.title}>Atualizar Dados</Text>
 
@@ -35,10 +32,6 @@ const Atualizacao = (props) => {
                     <AppButton title='Atualizar' onPress={props.handleSubmit}/>
                 </View>
 
-           </View>
-           <View>
-            <Image source={require('../assets/icons/icons8-u-vire-para-a-esquerda-48.png')} style={style.img} ></Image>
-            <Text>Voltar</Text>
            </View>
            
         </View>
@@ -72,7 +65,7 @@ const style = StyleSheet.create({
         justifyContent: "space-between",
         width: "100%",
         height: "60%",
-        marginTop: 25,
+        marginTop: 40,
     },
 
     button : {

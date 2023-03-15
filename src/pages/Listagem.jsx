@@ -16,7 +16,7 @@ const Listagem = (props) => {
                 <Image source={require('../assets/icons/icons8-search-30.png')} style={style.img}></Image>
             </View>
            
-            <SmallButton title='Adicionar +' style={style.btn}/>
+            <SmallButton title='Adicionar +' style={style.btn} onPress={() => props.navigation.navigate('SubScreens', { screen: 'Adicionar' })}/>
 
             <ScrollView style={style.list}>
                 <CardList nome="Prednisona" dose="2" inicio="06/03/2023" posologia="12" periodo="15"/>

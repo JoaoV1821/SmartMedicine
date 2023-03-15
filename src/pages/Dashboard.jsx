@@ -36,7 +36,7 @@ const style = StyleSheet.create({
       fontWeight: 600,
       marginTop: 15,
       marginLeft:10,
-      marginBottom: 5
+      marginBottom: 10
    },
 
    topSection : {
