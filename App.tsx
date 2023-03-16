@@ -7,6 +7,7 @@ import Dashboard from './src/pages/Dashboard.jsx';
 import Calendario from './src/pages/Calendario.jsx';
 import Configuracoes from './src/pages/Configuracoes.jsx';
 import Listagem from './src/pages/Listagem.jsx';
+import { Image } from 'react-native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -37,10 +38,40 @@ const MainScreens = () => {
         tabBarActiveBackgroundColor: '#094275'
       }}>
      
-        <Tab.Screen name="Dashboard" component={Dashboard} options={{headerShown: false,} }  />
-        <Tab.Screen name="Listagem" component={Listagem} options={{headerShown: false}}/>
-        <Tab.Screen name="Calendario" component={Calendario} options={{headerShown: false}}/>
-        <Tab.Screen name="Configuracoes" component={Configuracoes} options={{headerShown: false}}/>
+        <Tab.Screen name="Dashboard" component={Dashboard} options={{headerShown: false,  
+          tabBarLabel:'',  
+          tabBarIcon:() => { 
+              return (
+                <Image source={require('./src/assets/icons/icons8-home-page-40.png') } style={{width: 35, height: 35, marginTop: 10}}  ></Image>
+              ) 
+            }  
+          }  
+        }  />
+
+
+        <Tab.Screen name="Listagem" component={Listagem} options={{headerShown: false, 
+         tabBarLabel:'',  
+         tabBarIcon:() => { 
+             return (
+               <Image source={require('./src/assets/icons/icons8-pill-40.png') } style={{width: 35, height: 35, marginTop: 10}}  ></Image>
+             ) 
+           }  
+          }
+        } />
+        <Tab.Screen name="Calendario" component={Calendario} options={{headerShown: false,  tabBarLabel:'',  
+          tabBarIcon:() => { 
+              return (
+                <Image source={require('./src/assets/icons/icons8-calendar-40.png') } style={{width: 35, height: 35, marginTop: 10}}  ></Image>
+              ) 
+             }  
+            }
+          }/>
+        <Tab.Screen name="Configuracoes" component={Configuracoes} options={{headerShown: false,  tabBarLabel:'',  
+          tabBarIcon:() => { 
+              return (
+                <Image source={require('./src/assets/icons/icons8-settings-40.png') } style={{width: 35, height: 35, marginTop: 10}}  ></Image>
+              ) 
+            }  }}/>
         <Tab.Screen name='SubScreens' component={SubScreens} options={{headerShown: false, tabBarButton: () => null,
     }}/>
        
