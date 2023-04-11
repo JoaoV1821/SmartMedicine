@@ -4,12 +4,13 @@ import { StyleSheet, Text, View, TextInput, Alert } from "react-native";
 import AppButton from "../components/AppButton";
 
 
-const Adicionar = (props) => {
+const AtualizarMed = (props) => {
     return (
         <View style={style.body}>
         
            <View style={style.container}>
-                <Text style={style.title}>Novo medicamento</Text>
+                <Text style={style.title}>Atualizar medicamento</Text>
+                
 
                 <TextInput placeholder="Nome" style={style.input} onChangeText={text => props.setFieldValue('nome', text)}></TextInput>
 
@@ -20,14 +21,14 @@ const Adicionar = (props) => {
                 <TextInput placeholder="Posologia" style={style.input} onChangeText={text => props.setFieldValue('posologia', text)}></TextInput>
 
                 <View style={style.line}></View>
-                <TextInput placeholder="Data de início" style={style.input} onChangeText={text => props.setFieldValue('data', text)} ></TextInput>
+                <TextInput placeholder="Data de início" style={style.input} onChangeText={text => props.setFieldValue('data', text)}></TextInput>
 
                 <View style={style.line}></View>
                 <TextInput placeholder="Período" style={style.input} onChangeText={text => props.setFieldValue('periodo', text)}></TextInput>
 
                 <View style={style.line}></View>
                 <View style={style.button}>
-                    <AppButton title='Adicionar' onPress={props.handleSubmit}/>
+                    <AppButton title='Atualizar' onPress={props.handleSubmit}/>
                 </View>
 
            </View>
@@ -118,11 +119,9 @@ export default withFormik({
             } else if (values.periodo === '' || values.periodo === null) {
                 Alert.alert('Digite o período!');
                
-            } else {
-                Alert.alert("Medicamento adicionado!");
-            }
+            } 
       
         }
 
-})(Adicionar);
+})(AtualizarMed);
 

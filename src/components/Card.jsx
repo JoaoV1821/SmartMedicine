@@ -1,6 +1,19 @@
 import React from "react";
 import { StyleSheet, View, Text, Image, TouchableHighlight, Alert} from "react-native";
 
+
+const createTwoButtonAlert = () =>
+    Alert.alert('Deseja excluir este medicamento?', "", [
+      {
+        text: 'Cancelar',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'Sim', onPress: () => console.log('OK Pressed')},
+    ]);
+
+
+
 export const Card = (props) => {
     return (
         <View style={style.card}>
@@ -30,11 +43,11 @@ export const CardList = (props) => {
                 <Text>Início: {props.inicio}</Text>
                 <Text>Período: {props.periodo} dias</Text>
             </View>
-            <TouchableHighlight onPress={props.onPress} >
+            <TouchableHighlight onPress={props.action} >
                 <Image source={require('../assets/icons/icons8-pencil-30.png')} style={style.img}></Image>
             </TouchableHighlight>
 
-            <TouchableHighlight onPress={ () => {Alert.alert('Deseja excluir este medicamento?')}} >
+            <TouchableHighlight onPress={ () => {createTwoButtonAlert()}} >
                 <Image source={require('../assets/icons/icons8-waste-30.png')} style={style.img}></Image>
             </TouchableHighlight>     
         </View>

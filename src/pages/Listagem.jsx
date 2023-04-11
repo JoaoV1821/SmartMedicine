@@ -19,10 +19,10 @@ const Listagem = (props) => {
             <SmallButton title='Adicionar +' style={style.btn} onPress={() => props.navigation.navigate('SubScreens', { screen: 'Adicionar' })}/>
 
             <ScrollView style={style.list}>
-                <CardList nome="Prednisona" dose="2" inicio="06/03/2023" posologia="12" periodo="15"/>
-                <CardList nome="Prednisona" dose="2" inicio="06/03/2023" posologia="12" periodo="15"/>
-                <CardList nome="Prednisona" dose="2" inicio="06/03/2023" posologia="12" periodo="15"/>
-                <CardList nome="Prednisona" dose="2" inicio="06/03/2023" posologia="12" periodo="15"/>
+                <CardList nome="Prednisona" dose="2" inicio="06/03/2023" posologia="12" periodo="15" action={() => props.navigation.navigate('SubScreens', { screen: 'AtualizaMed' })} />
+                <CardList nome="Prednisona" dose="2" inicio="06/03/2023" posologia="12" periodo="15" action={() => props.navigation.navigate('SubScreens', { screen: 'AtualizaMed' })}/>
+                <CardList nome="Prednisona" dose="2" inicio="06/03/2023" posologia="12" periodo="15" action={() => props.navigation.navigate('SubScreens', { screen: 'AtualizaMed' })}/>
+                <CardList nome="Prednisona" dose="2" inicio="06/03/2023" posologia="12" periodo="15" action={() => props.navigation.navigate('SubScreens', { screen: 'AtualizaMed' })}/>
             </ScrollView>
         </View>
     )

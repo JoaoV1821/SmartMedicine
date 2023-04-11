@@ -13,7 +13,7 @@ const Login = (props) => {
             <View style={style.container}>
 
                 <Text style={style.title}>Login</Text>
-                <TextInput style={style.input} placeholder='Email' keyboardType="email-address" value={props.values.email} onChangeText={text => props.setFieldValue('email', text)} autoCompleteType="off"/>
+                <TextInput style={style.input} placeholder='Email' keyboardType="email-address" value={props.values.email} onChangeText={text => props.setFieldValue('email', text)} autoComplete="off"/>
                 <TextInput style={style.input} placeholder='Senha' secureTextEntry={true} value={props.values.senha} onChangeText={text => props.setFieldValue('senha', text)} />
 
                 <AppButton title="Acessar" onPress={props.handleSubmit} />
@@ -59,7 +59,7 @@ const style = StyleSheet.create({
         width: 255,
         height: 47,
         paddingLeft: 20,
-       
+
     },
 
     password: {

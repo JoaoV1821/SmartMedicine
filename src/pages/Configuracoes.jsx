@@ -1,7 +1,10 @@
-import React from "react";
-import { Text, View, StyleSheet, Switch } from "react-native";
+import React, {useState} from "react";
+import { Text, View, StyleSheet, Switch} from "react-native";
 
 const Configuracoes = (props) => {
+    const [isEnabled, setIsEnabled] = useState(true);
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
     return (
         <View>
             <Text style={style.title}>
@@ -13,10 +16,14 @@ const Configuracoes = (props) => {
             <View style={style.container}>
                 <Text style={style.link}>Notificações</Text> 
 
-                <Switch></Switch>
+                <Switch  onValueChange={toggleSwitch}
+        value={isEnabled}>
+
+                </Switch>
             </View>
             
             <Text style={style.link}>Sobre</Text>
+            <Text style={style.link}>Sair</Text>
         </View>
     )
 }

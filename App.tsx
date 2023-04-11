@@ -2,6 +2,7 @@ import React from 'react';
 import Login from './src/pages/Login.jsx';
 import Cadastro from './src/pages/Cadastro.jsx';
 import Atualizacao from './src/pages/Atualizacao.jsx';
+import AtualizarMed from './src/pages/AtualizarMed.jsx';
 import Adicionar from './src/pages/Adicionar.jsx';
 import Dashboard from './src/pages/Dashboard.jsx';
 import Calendario from './src/pages/Calendario.jsx';
@@ -20,6 +21,7 @@ const SubScreens = () => {
     <Stack.Navigator>
       <Stack.Screen name='Adicionar' component={Adicionar} options={{headerShown: false}}/>
       <Stack.Screen name='Atualizacao' component={Atualizacao} options={{headerShown: false}}/>
+      <Stack.Screen name='AtualizaMed' component={AtualizarMed} options={{headerShown: false}}/>
     </Stack.Navigator>
 
   )
