@@ -26,6 +26,9 @@ const Adicionar = (props) => {
                 <TextInput placeholder="Período" style={style.input} onChangeText={text => props.setFieldValue('periodo', text)}></TextInput>
 
                 <View style={style.line}></View>
+                <TextInput placeholder="Hora" style={style.input} onChangeText={text => props.setFieldValue('hora', text)}></TextInput>
+
+                <View style={style.line}></View>
                 <View style={style.button}>
                     <AppButton title='Adicionar' onPress={props.handleSubmit}/>
                 </View>
@@ -94,7 +97,7 @@ const style = StyleSheet.create({
 })
 
 export default withFormik({
-    mapPropsToValues: () => ({ nome: '', doses: '', posologia: '', data: '', periodo: '' }),
+    mapPropsToValues: () => ({ nome: '', doses: '', posologia: '', data: '', periodo: '' , hora: ''}),
   
     handleSubmit: (values, {props}) => {
             values.nome = values.nome.trim();
@@ -118,6 +121,9 @@ export default withFormik({
             } else if (values.periodo === '' || values.periodo === null) {
                 Alert.alert('Digite o período!');
                
+            } else if (values.hora === '' || values.hora === null) {
+                Alert.alert('Digite a hora!');
+            
             } else {
                 Alert.alert("Medicamento adicionado!");
             }
