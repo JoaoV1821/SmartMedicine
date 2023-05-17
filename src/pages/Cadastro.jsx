@@ -3,7 +3,7 @@ import { withFormik } from "formik";
 import { StyleSheet, Text, View, TextInput, Alert } from "react-native";
 import AppButton from "../components/AppButton";
 import LogoEscura from "../components/Logo";
-
+import { postUser } from "../services/API";
 
 const Cadastro = (props) => {
     return (
@@ -105,7 +105,7 @@ const style = StyleSheet.create({
 export default withFormik({
     mapPropsToValues: () => ({ nome: '', email: '', celular: '', senha: '', nomeResp: '', contatoResp: '' }),
   
-    handleSubmit: (values, {props}) => {
+    handleSubmit: (values) => {
             values.nome = values.nome.trim();
             values.email = values.email.trim();
             values.celular = values.celular.trim();
@@ -144,8 +144,11 @@ export default withFormik({
                     console.warn(celRegex.test(values.celular));
                     
                 } else {
-                    Alert.alert(values);
-                    props.navigate.navigation('Dashboard');
+                    try {
+                        postUser(values);
+                    } catch(error) {
+                        Alert.alert(error);
+                    }
                 }
             }
       

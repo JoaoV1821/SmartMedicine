@@ -3,9 +3,9 @@ import { withFormik } from "formik";
 import { StyleSheet, Text, View, TextInput, Alert} from "react-native";
 import AppButton from "../components/AppButton";
 import LogoEscura from "../components/Logo";
+import { getUsers } from "../services/API";
 
 const Login = (props) => {
-    
     return  (
         <View style={style.body}>
             <LogoEscura/>
@@ -91,7 +91,7 @@ const style = StyleSheet.create({
 export default withFormik({
     mapPropsToValues: () => ({ email: '', senha: '' }),
   
-    handleSubmit: (values, {props}) => {
+    handleSubmit: (values) => {
         values.email = values.email.trim();
         values.senha = values.senha.trim();
 
@@ -103,7 +103,7 @@ export default withFormik({
         Alert.alert('Digite sua senha!');
     
       } else {
-
+        
         const emailRegex = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+.com+$/, "gm");
         const ehValido = emailRegex.test(values.email);
 
@@ -111,8 +111,28 @@ export default withFormik({
                 Alert.alert("Email inválido!");
     
             } else { 
-               props.navigation.push("MainScreens");
+               
+
+               try {
+                    let login = false;
+                    const users = getUsers();
+                    console.warn(users);
+                    for (i = 0; i< users.length; i++) {
+                        if(users.email === values.email && users.senha === values.senha) {
+                            console.warn(users.email);
+                            console.warn(users.senha)
+                            login = true;
+                        }
+                   }
     
+                   if (login) {
+                        props.navigation.push("MainScreens");
+                   } else {
+                        Alert.alert("Usuário inválido!");
+                   }
+               } catch(error) {
+                    Alert.alert(error);
+               };
             }
         }
     }
