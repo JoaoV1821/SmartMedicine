@@ -145,7 +145,7 @@ export default withFormik({
                     
                 } else {
                     try {
-                        postUser(values);
+                        if(postUser(values)) Alert.alert("Usuário cadastrado");
                     } catch(error) {
                         Alert.alert(error);
                     }

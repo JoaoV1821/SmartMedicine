@@ -1,15 +1,17 @@
-import React from "react";
-import { withFormik } from "formik";
+import React, {useState, useEffect} from "react";
+import { useFormikContext, withFormik } from "formik";
 import { StyleSheet, Text, View, TextInput, Alert} from "react-native";
 import AppButton from "../components/AppButton";
 import LogoEscura from "../components/Logo";
 import { getUsers } from "../services/API";
 
+
 const Login = (props) => {
+    
     return  (
         <View style={style.body}>
             <LogoEscura/>
-        
+            
             <View style={style.container}>
 
                 <Text style={style.title}>Login</Text>
@@ -91,7 +93,17 @@ const style = StyleSheet.create({
 export default withFormik({
     mapPropsToValues: () => ({ email: '', senha: '' }),
   
-    handleSubmit: (values) => {
+    handleSubmit: async (values) => {
+
+        const requestUsers = async () => {
+            try {
+                const response = await getUsers();
+                return response
+            } catch (error) {
+                Alert.alert(error.message);
+            }
+        }
+    
         values.email = values.email.trim();
         values.senha = values.senha.trim();
 
@@ -111,16 +123,15 @@ export default withFormik({
                 Alert.alert("Email inválido!");
     
             } else { 
-               
-
+            
                try {
                     let login = false;
-                    const users = getUsers();
-                    console.warn(users);
-                    for (i = 0; i< users.length; i++) {
-                        if(users.email === values.email && users.senha === values.senha) {
+                    const users = await requestUsers();
+                    console.warn(users['users']);
+                    for (i = 0; i< users['users'].length; i++) {
+                        if(users['users'].email === values.email && users['users'].senha === values.senha) {
                             console.warn(users.email);
-                            console.warn(users.senha)
+                            console.warn(users.senha);
                             login = true;
                         }
                    }
@@ -131,7 +142,7 @@ export default withFormik({
                         Alert.alert("Usuário inválido!");
                    }
                } catch(error) {
-                    Alert.alert(error);
+                    Alert.alert(error.message);
                };
             }
         }

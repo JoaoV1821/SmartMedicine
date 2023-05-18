@@ -5,15 +5,10 @@ const instance = axios.create({
 });
 
 export const getUsers = async () => {
-    await instance.get('/user/listAllUsers')
-    .then(response => {
-        json = response.data;
-        console.warn(response.status)
-        return json['users'];
-    } )
-    .catch(error => {
-        console.warn(error);
-    })
+    
+    const response = await instance.get('/user/listAllUsers');
+    const json = await response.data;
+    return json;
 };
 
 export const postUser =  async (object) => {
@@ -32,9 +27,12 @@ export const postUser =  async (object) => {
         }
       })
       .then(response => {
-            console.warn(response.status);
+            if(response.status === 200) {
+                return true
+            }
       })
       .catch(error => {
             console.warn(error);
+            return false
       });
 }
