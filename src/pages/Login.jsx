@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import { useFormikContext, withFormik } from "formik";
+import React from "react";
+import { withFormik } from "formik";
 import { StyleSheet, Text, View, TextInput, Alert} from "react-native";
 import AppButton from "../components/AppButton";
 import LogoEscura from "../components/Logo";
@@ -93,7 +93,7 @@ const style = StyleSheet.create({
 export default withFormik({
     mapPropsToValues: () => ({ email: '', senha: '' }),
   
-    handleSubmit: async (values) => {
+    handleSubmit: async (values, {props}) => {
 
         const requestUsers = async () => {
             try {
@@ -127,14 +127,14 @@ export default withFormik({
                try {
                     let login = false;
                     const users = await requestUsers();
-                    console.warn(users['users']);
-                    for (i = 0; i< users['users'].length; i++) {
-                        if(users['users'].email === values.email && users['users'].senha === values.senha) {
-                            console.warn(users.email);
-                            console.warn(users.senha);
+                    
+                    users['users'].map((user) => {
+                        if (user.email === values.email && user.senha === values.senha) {
+                            console.warn(user.nome);
+                            console.warn(user.id);
                             login = true;
                         }
-                   }
+                   })
     
                    if (login) {
                         props.navigation.push("MainScreens");
