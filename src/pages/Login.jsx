@@ -7,7 +7,6 @@ import { getUsers } from "../services/API";
 
 
 const Login = (props) => {
-    
     return  (
         <View style={style.body}>
             <LogoEscura/>
@@ -131,24 +130,28 @@ export default withFormik({
                     users['users'].map((user) => {
                         if (user.email === values.email && user.senha === values.senha) {
                             console.warn(user.nome);
-                            console.warn(user.id);
                             login = true;
                         }
                    })
     
                    if (login) {
                         props.navigation.push("MainScreens");
+                        
+
                    } else {
                         Alert.alert("Usuário inválido!");
                    }
+
                } catch(error) {
-                    Alert.alert(error.message);
+                    Alert.alert(error.message); 
                };
             }
         }
     }
 
 })(Login);
+
+
 
 
 

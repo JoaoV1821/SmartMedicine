@@ -7,7 +7,7 @@ const Dashboard = (props) => {
     <SafeAreaView style={{backgroundColor: 'white', width: '100%', height: '100%'}}>
       
       <View style={style.topSection}>
-         <Text style={style.title}>Olá, João</Text>
+         <Text style={style.title}>Olá, {props.nome}</Text>
          <Card title="Próximo medicamento" nome="Prednisona" hora="15:30"/>
       </View>
 
