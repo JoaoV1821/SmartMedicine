@@ -70,7 +70,7 @@ const style = StyleSheet.create({
         borderWidth: 2
         
     },
-
+    
     line: {
         borderBottomColor: '#717F7F',
         borderBottomWidth: 1,
@@ -84,70 +84,37 @@ const style = StyleSheet.create({
         color: '#717F7F',
         left: 50,
         top: 15
-
     }, 
-
 });
+
 
 export default withFormik({
     mapPropsToValues: () => ({ email: '', senha: '' }),
   
     handleSubmit: async (values, {props}) => {
-
-        const requestUsers = async () => {
-            try {
-                const response = await getUsers();
-                return response
-            } catch (error) {
-                Alert.alert(error.message);
-            }
+        try {
+          if (values.email.trim() === '' || values.email === null) {
+            throw new Error('Digite seu email!')
+          }
+           if (values.senha.trim() === '' || values.senha === null) {
+            throw new Error('Digite sua senha!')
+          }
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
+          if (!emailRegex.test(values.email)) {
+            throw new Error('Email inválido!')
+          }
+          const users = await getUsers();
+          const user = users?.users?.find((u) => u.email === values.email && u.senha === values.senha);
+          
+           if (user) {
+            props.navigation.push('MainScreens');
+          } else {
+            throw new Error('Usuário inválido!')
+          }
+        } catch (error) {
+          Alert.alert(error.message);
         }
-    
-        values.email = values.email.trim();
-        values.senha = values.senha.trim();
-
-      if (values.email === ''  || values.email === null) {
-        Alert.alert('Digite seu email!');
-
-      } else if (values.senha === '' || values.senha === null){
-
-        Alert.alert('Digite sua senha!');
-    
-      } else {
-        
-        const emailRegex = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+.com+$/, "gm");
-        const ehValido = emailRegex.test(values.email);
-
-            if (!ehValido) {
-                Alert.alert("Email inválido!");
-    
-            } else { 
-            
-               try {
-                    let login = false;
-                    const users = await requestUsers();
-                    
-                    users['users'].map((user) => {
-                        if (user.email === values.email && user.senha === values.senha) {
-                            console.warn(user.nome);
-                            login = true;
-                        }
-                   })
-    
-                   if (login) {
-                        props.navigation.push("MainScreens");
-                        
-
-                   } else {
-                        Alert.alert("Usuário inválido!");
-                   }
-
-               } catch(error) {
-                    Alert.alert(error.message); 
-               };
-            }
-        }
-    }
+      },
 
 })(Login);
 

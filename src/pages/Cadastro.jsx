@@ -6,6 +6,7 @@ import LogoEscura from "../components/Logo";
 import {postUser} from "../services/API";
 
 const Cadastro = (props) => {
+    
     return (
         <View style={style.body}>
             <LogoEscura/>
