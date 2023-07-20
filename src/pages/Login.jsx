@@ -1,33 +1,90 @@
-import React from "react";
-import { withFormik } from "formik";
-import { StyleSheet, Text, View, TextInput, Alert} from "react-native";
+import React, {useState} from "react";
+import { StyleSheet, Text, View, TextInput} from "react-native";
 import AppButton from "../components/AppButton";
 import LogoEscura from "../components/Logo";
 import { getUsers } from "../services/API";
+import { useDispatch} from 'react-redux';
+import userActions from "../actions/userActions";
 
+const Login = ({navigation}) => {
+  const dispatch = useDispatch();
 
-const Login = (props) => {
-    return  (
-        <View style={style.body}>
-            <LogoEscura/>
-            
-            <View style={style.container}>
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [error, setError] = useState("");
+  
+  const  handleLogin = async () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
+    setError('');
+    setEmail(email.trim());
+    setSenha(senha.trim());
+    
+    try {
 
-                <Text style={style.title}>Login</Text>
-                <TextInput style={style.input} placeholder='Email' keyboardType="email-address" value={props.values.email} onChangeText={text => props.setFieldValue('email', text)} autoComplete="off"/>
-                <TextInput style={style.input} placeholder='Senha' secureTextEntry={true} value={props.values.senha} onChangeText={text => props.setFieldValue('senha', text)} />
+      if (email === '' || email === null) {
+        throw new Error("*Digite seu Email!");
 
-                <AppButton title="Acessar" onPress={props.handleSubmit} />
-               
-            </View>
-            
-            <View style={style.line}/>
-            <Text style={style.smallText} onPress={() => props.navigation.navigate('Cadastro')}>Não tem uma conta? Toque para criar uma</Text>
-        </View>
-    ) 
-}
+    } else if (senha === '' || senha === null) {
+      throw new Error("*Digite sua senha !");
 
-const style = StyleSheet.create({
+    } else if (!emailRegex.test(email)) {
+      throw new Error("*Email inválido!");
+
+    } else {
+          const users = await getUsers();
+          const user = users?.users?.find((u) => u.email === email && u.senha === senha);
+
+          if (user) {
+              dispatch(userActions.setUser(user))
+              navigation.push("MainScreens");
+
+          } else {
+              throw new Error("*Usuário inválido!");
+          }
+    }
+    
+    } catch(error) {
+      setError(error.message);
+    }
+     
+  }
+  
+  return (
+    <View style={styles.body} >
+      <LogoEscura />
+
+      <View style={styles.container}>
+        <Text style={styles.title}>Login</Text>
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          keyboardType="email-address"
+          onChangeText={text => setEmail(text)}
+          autoCompleteType="off"
+          onFocus={() => setError('')}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Senha"
+          secureTextEntry={true}
+          value={senha}
+          onChangeText={text => setSenha(text)}
+          onFocus={() => setError('')}
+        />
+
+        <AppButton title="Acessar" onPress={handleLogin} />
+      </View>
+    
+      <View style={styles.line} />
+      <Text style={styles.smallText} onPress={() => navigation.navigate('Cadastro')}>
+        Não tem uma conta? Toque para criar uma
+      </Text>
+      </View>
+  );
+};
+
+const styles = StyleSheet.create({
 
     body: {
         backgroundColor: "#fff",
@@ -85,41 +142,16 @@ const style = StyleSheet.create({
         left: 50,
         top: 15
     }, 
+
+    error : {
+      fontFamily: 'Inter',
+      fontStyle: 'normal',
+      color: 'red',
+      right: 50,
+      top: 15,
+      marginBottom: 10
+    }
 });
 
 
-export default withFormik({
-    mapPropsToValues: () => ({ email: '', senha: '' }),
-  
-    handleSubmit: async (values, {props}) => {
-        try {
-          if (values.email.trim() === '' || values.email === null) {
-            throw new Error('Digite seu email!')
-          }
-           if (values.senha.trim() === '' || values.senha === null) {
-            throw new Error('Digite sua senha!')
-          }
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
-          if (!emailRegex.test(values.email)) {
-            throw new Error('Email inválido!')
-          }
-          const users = await getUsers();
-          const user = users?.users?.find((u) => u.email === values.email && u.senha === values.senha);
-          
-           if (user) {
-            props.navigation.push('MainScreens');
-          } else {
-            throw new Error('Usuário inválido!')
-          }
-        } catch (error) {
-          Alert.alert(error.message);
-        }
-      },
-
-})(Login);
-
-
-
-
-
-
+export default Login;

@@ -12,7 +12,13 @@ import { Image } from 'react-native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createStore} from 'redux'
+import rootReducer from './src/reducers/index.js';
+import {Provider} from 'react-redux'
 
+const store = createStore(
+  rootReducer
+)
 
 const SubScreens = () => {
   const Stack = createNativeStackNavigator();
@@ -23,9 +29,7 @@ const SubScreens = () => {
       <Stack.Screen name='Atualizacao' component={Atualizacao} options={{headerShown: false}}/>
       <Stack.Screen name='AtualizaMed' component={AtualizarMed} options={{headerShown: false}}/>
     </Stack.Navigator>
-
   )
-  
 }
 
 const MainScreens = () => {
@@ -89,7 +93,8 @@ function App(): JSX.Element {
 
   return (
    
-    <NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
       
       <Stack.Navigator initialRouteName="Login" >
         <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
@@ -98,6 +103,8 @@ function App(): JSX.Element {
       </Stack.Navigator>
       
     </NavigationContainer>
+    </Provider>
+    
   );
  
 }

@@ -1,13 +1,20 @@
 import React from "react";
 import { StyleSheet, Text, View, SafeAreaView, Image} from "react-native";
 import {Card, CardMiddle} from "../components/Card.jsx";
+import { useSelector } from 'react-redux';
 
 const Dashboard = (props) => {
+   const currentUser = useSelector(state => state.currentUser);
+   const handleFirstName = (name) => {
+      return name.split(" ")[0];
+   }
+   const firstName = handleFirstName(currentUser.user.nome);
+
    return (
     <SafeAreaView style={{backgroundColor: 'white', width: '100%', height: '100%'}}>
       
       <View style={style.topSection}>
-         <Text style={style.title}>Olá, {props.nome}</Text>
+         <Text style={style.title}>Olá, {firstName}</Text>
          <Card title="Próximo medicamento" nome="Prednisona" hora="15:30"/>
       </View>
 
@@ -18,7 +25,7 @@ const Dashboard = (props) => {
 
       <View style={style.cards}>
          <CardMiddle title='Esquecimentos' msg='3'/>
-         <CardMiddle title='Medicamento mais esquecido' msg='Topiramato'/>
+         <CardMiddle title='Medicamento mais esquecido' msg='Topiramato'/> 
          <CardMiddle title='Total de medicamentos' msg="3"/>
          <CardMiddle title='Frequência' msg="30 dias"/>
       </View>
