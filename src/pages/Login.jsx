@@ -2,9 +2,10 @@ import React, {useState} from "react";
 import { StyleSheet, Text, View, TextInput} from "react-native";
 import AppButton from "../components/AppButton";
 import LogoEscura from "../components/Logo";
-import { getUsers } from "../services/API";
+import { authenticateUser, getUsers } from "../services/API";
 import { useDispatch} from 'react-redux';
 import userActions from "../actions/userActions";
+import { setAuthToken } from "../actions/authActions";
 
 const Login = ({navigation}) => {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const Login = ({navigation}) => {
   
   const  handleLogin = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
+    
     setError('');
     setEmail(email.trim());
     setSenha(senha.trim());
@@ -31,12 +33,18 @@ const Login = ({navigation}) => {
       throw new Error("*Email inválido!");
 
     } else {
+      
+      const request = await authenticateUser(email, senha);
+      console.warn(request)
+      
+      if (request) {
           const users = await getUsers();
-          const user = users?.users?.find((u) => u.email === email && u.senha === senha);
+          const user = users?.users?.find((u) => u.email === email);
 
-          if (user) {
-              dispatch(userActions.setUser(user))
-              navigation.push("MainScreens");
+          dispatch(userActions.setUser(user))
+          dispatch(setAuthToken(request));
+
+          navigation.push("MainScreens");
 
           } else {
               throw new Error("*Usuário inválido!");
@@ -44,6 +52,7 @@ const Login = ({navigation}) => {
     }
     
     } catch(error) {
+    
       setError(error.message);
     }
      

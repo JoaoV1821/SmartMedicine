@@ -1,7 +1,10 @@
 import userActions from './userActions'
+import { setAuthToken } from './authActions'
 
 const allActions = {
-    userActions
+    userActions,
+    setAuthToken
+
 }
 
 export default allActions

@@ -1,10 +1,58 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, ScrollView, Image} from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { SmallButton } from "../components/AppButton";
 import { CardList } from "../components/Card";
+import { useSelector } from "react-redux";
+import { getMedicines } from "../services/API";
+
+
+const medicamentos = [
+    {
+        nome: 'prednisona',
+        doses: '2',
+        posologia: '12',
+        inicio: '12/12/2021',
+        periodo: '7'
+    },
+
+    {
+        nome: 'prednisona',
+        doses: '2',
+        posologia: '12',
+        inicio: '12/12/2021',
+        periodo: '7'
+    },
+
+    {
+        nome: 'prednisona',
+        doses: '2',
+        posologia: '12',
+        inicio: '12/12/2021',
+        periodo: '7'
+    }
+]
+
 
 const Listagem = (props) => {
+    const token = useSelector(state => state.authReducer.token);
+    const [medicines, setMedicines] = useState([]);
+
+    const requestMedicines = async () => {
+        try {
+            const response = await  getMedicines(token);
+    
+            setMedicines(response);
+        } catch(error) {
+            console.warn(error.message);
+        }
+        
+    }
+
+    useEffect(() => {
+        requestMedicines();
+    }, [])
+    
     return (
         <View style={{backgroundColor: '#FFFF', width: '100%', height: '100%'}}>
             <Text style={style.title}>
@@ -17,12 +65,11 @@ const Listagem = (props) => {
             </View>
            
             <SmallButton title='Adicionar +' style={style.btn} onPress={() => props.navigation.navigate('SubScreens', { screen: 'Adicionar' })}/>
-
+            
             <ScrollView style={style.list}>
-                <CardList nome="Prednisona" dose="2" inicio="06/03/2023" posologia="12" periodo="15" action={() => props.navigation.navigate('SubScreens', { screen: 'AtualizaMed' })} />
-                <CardList nome="Prednisona" dose="2" inicio="06/03/2023" posologia="12" periodo="15" action={() => props.navigation.navigate('SubScreens', { screen: 'AtualizaMed' })}/>
-                <CardList nome="Prednisona" dose="2" inicio="06/03/2023" posologia="12" periodo="15" action={() => props.navigation.navigate('SubScreens', { screen: 'AtualizaMed' })}/>
-                <CardList nome="Prednisona" dose="2" inicio="06/03/2023" posologia="12" periodo="15" action={() => props.navigation.navigate('SubScreens', { screen: 'AtualizaMed' })}/>
+                <Text>
+                    {medicines}
+                </Text>
             </ScrollView>
         </View>
     )

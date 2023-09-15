@@ -2,12 +2,20 @@ import React from "react";
 import { StyleSheet, Text, View, SafeAreaView, Image} from "react-native";
 import {Card, CardMiddle} from "../components/Card.jsx";
 import { useSelector } from 'react-redux';
+import axios from "axios";
 
-const Dashboard = (props) => {
+const Dashboard = () => {
+  
+
    const currentUser = useSelector(state => state.currentUser);
+   const authToken = useSelector((state) => state.authReducer);
+
+   console.warn(authToken);
+
    const handleFirstName = (name) => {
       return name.split(" ")[0];
    }
+   
    const firstName = handleFirstName(currentUser.user.nome);
 
    return (
@@ -42,7 +50,7 @@ const style = StyleSheet.create({
       fontSize: 40,
       fontWeight: 600,
       marginTop: 15,
-      marginLeft:10,
+      marginLeft:5,
       marginBottom: 10
    },
 

@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text, Image, TouchableHighlight, Alert} from "react-native";
 
-
 const createTwoButtonAlert = () =>
     Alert.alert('Deseja excluir este medicamento?', "", [
       {

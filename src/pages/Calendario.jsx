@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { LocaleConfig } from 'react-native-calendars';
 import { CardCalendar } from "../components/Card";
+import { getList } from "../services/API";
+import { useSelector } from "react-redux";
 
 LocaleConfig.locales['br'] = {
   monthNames: [
@@ -27,7 +29,26 @@ LocaleConfig.locales['br'] = {
 
 LocaleConfig.defaultLocale = 'br';
 
-const Calendario = (props) => {
+const Calendario = () => {
+  const [date, setDate] = useState("");
+  const [list, setList] = useState();
+  const token = useSelector((state) => state.authReducer.token);
+  const currentDate = new Date();
+
+  const handleGetList = async (date) => {
+      const response = await getList(token, date);
+
+      setList(response);
+  }
+
+  useEffect(() => {
+      setDate(`${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`);
+      handleGetList(date);
+   
+  }, [])
+
+  console.warn(date);
+  console.warn(list);
 
     return ( 
         
