@@ -1,16 +1,16 @@
 import React from "react";
 import { StyleSheet, View, Text, Image, TouchableHighlight, Alert} from "react-native";
+import { deleteMedicine } from "../services/API";
 
-const createTwoButtonAlert = () =>
+const handleDelete =  async (id, token) =>
     Alert.alert('Deseja excluir este medicamento?', "", [
       {
         text: 'Cancelar',
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      {text: 'Sim', onPress: () => console.log('OK Pressed')},
+      {text: 'Sim', onPress: () => deleteMedicine(id, token)},
     ]);
-
 
 
 export const Card = (props) => {
@@ -40,30 +40,25 @@ export const CardList = (props) => {
                 <Text>Doses: {props.dose}</Text>
                 <Text>Posologia: {props.posologia}h</Text>
                 <Text>Início: {props.inicio}</Text>
-                <Text>Período: {props.periodo} dias</Text>
+                <Text>Período: {props.periodo}</Text>
             </View>
-            <TouchableHighlight onPress={props.action} >
+            <TouchableHighlight onPress={() => props.navigation.navigate('SubScreens', { screen: 'AtualizaMed' })} >
                 <Image source={require('../assets/icons/icons8-pencil-30.png')} style={style.img}></Image>
             </TouchableHighlight>
 
-            <TouchableHighlight onPress={ () => {createTwoButtonAlert()}} >
-                <Image source={require('../assets/icons/icons8-waste-30.png')} style={style.img}></Image>
+            <TouchableHighlight onPress={ () => {handleDelete(props.id, props.token)}} >
+                <Image source={require('../assets/icons/icons8-waste-30.png')} style={style.img} ></Image>
             </TouchableHighlight>     
         </View>
-     
     )
 }
 
 
 export const CardCalendar = (props) => {
     return (
-        <View style={style.container}>
-
-            <View style={style.cardCalendar}>
-                <Text style={style.title}>{props.data}</Text>
-                <Text>{props.medInfo}</Text>
-            </View>
-           
+        <View>
+                <Text>Medicamento: {props.nome}</Text>
+                <Text>Horário: {props.hora}</Text>
         </View>
     )
 }
@@ -91,7 +86,7 @@ const style = StyleSheet.create({
     },
 
     title: {
-        fontWeight: 600,
+        fontWeight: 700,
     },
 
     cardMiddle : {
@@ -99,8 +94,8 @@ const style = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: '#F1F5F4',
         borderRadius: 10,
-        width: 130,
-        height: 90,
+        width: 200,
+        height: 100,
         marginBottom: 20,
         shadowColor: 'black',
         shadowOpacity: 0.9,

@@ -21,7 +21,7 @@ const style = StyleSheet.create({
     button : {
         textAlign: 'center',
         width: 255,
-        height: 40,
+        height: 50,
         backgroundColor: '#094275',
         borderRadius: 20,
         
@@ -30,10 +30,10 @@ const style = StyleSheet.create({
     text: {
         fontFamily: 'Montsserrat',
         fontStyle: 'normal',
-        fontSize: 20,
+        fontSize: 25,
         color: '#FFFFFF', 
         textAlign: 'center',
-        paddingTop: 6,
+        paddingTop: 12,
         lineHeight: 24,
     },
 

@@ -1,18 +1,30 @@
 import React, { useState } from "react";
-import {StyleSheet, Text, View, TextInput} from "react-native";
+import {StyleSheet, Text, View, TextInput, Alert} from "react-native";
 import AppButton from "../components/AppButton";
 import { useSelector } from 'react-redux';
 import { postMedicine } from "../services/API";
 
 const Adicionar = () => {
-    const email = useSelector(state => state.currentUser);
-    const token = useSelector(state => state.authReducer);
-
+    const email = useSelector(state => state.currentUser.user.email);
+    const token = useSelector(state => state.authReducer.token);
     const [nome, setNome] = useState("");
     const [error, setError] = useState("");
     const [doses, setDoses] = useState("");
     const [posologia, setPosologia] = useState("");
     const [periodo, setPeriodo] = useState("");
+    const [data, setData] = useState("");
+    const [hora, setHora] = useState("");
+    const [response, setResponse] = useState("");
+
+    const handlePost = async  (medicines) => {
+        try {
+            const response = await postMedicine(medicines, token);
+            setResponse(response);
+    
+        } catch(error) {
+            console.warn(error.message);
+        }
+    }
     
     const handleSubmit = async () => {
        
@@ -21,36 +33,49 @@ const Adicionar = () => {
         setDoses(doses.trim());
         setPosologia(posologia.trim());
         setPeriodo(periodo.trim());
+        setHora(hora.trim());
 
       try {
         
         if ( nome === "" || nome === null) {
-            throw new Error("*Digite seu nome!");
+            throw new Error("*Digite o nome do medicamento!");
     
           } else if (doses === "" || doses === null) {
-            throw new Error("*Digite seu email !");
+            throw new Error("*Digite a quatidade de doses!");
     
           } else if (posologia === "" || posologia === null) {
-            throw new Error("*Digite o número de celular!");
+            throw new Error("*Digite a posologia do medicamento!");
     
           } else if (periodo === "" || periodo === null) {
-                throw new Error("*Digite a senha!");
-    
+                throw new Error("*Digite o perido de uso do medicamento!");
+
           } else {
-            
+
+            let usoContinuoValue = 0;
+            let periodoValue = periodo
+
+            if (periodo === "uso") {
+                usoContinuoValue = 1
+                periodoValue = ""
+            } 
+                
             const medicamento = {
                 "userEmail": email,
                 "nome": nome ,
                 "doses": doses,
                 "posologia": posologia, 
-                "periodo": periodo
+                "periodo": periodoValue,
+                "data": data,
+                "hora_inicio": hora,
+                "uso_continuo": usoContinuoValue
             }
 
-            const response = await postMedicine(medicamento, token);
+            handlePost(medicamento);
 
-            if (response === 200) {
+            if (response) {
                 Alert.alert("Medicamento cadastrado!");
             } else {
+                
                 Alert.alert("Erro ao cadastrar!");
             }
           }
@@ -78,6 +103,12 @@ const Adicionar = () => {
              <TextInput placeholder="Período" style={style.input} onChangeText={text => setPeriodo(text)}></TextInput>
 
              <View style={style.line}></View>
+             <TextInput placeholder="Data início" style={style.input} onChangeText={text => setData(text)}></TextInput>
+
+             <View style={style.line}></View>
+             <TextInput placeholder="Hora início" style={style.input} onChangeText={text => setHora(text)}></TextInput>
+
+             <View style={style.line}></View>
              <View style={style.button}>
                  <AppButton title='Adicionar' onPress={handleSubmit}/>
              </View>
@@ -102,7 +133,7 @@ const style = StyleSheet.create({
         justifyContent: "space-between",
         width: "100%",
         height: "60%",
-        marginTop: 25
+        marginTop: 100
     },
 
     button: {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View } from "react-native";
+import { View, Text, StyleSheet} from "react-native";
 import { Calendar } from "react-native-calendars";
 import { LocaleConfig } from 'react-native-calendars';
 import { CardCalendar } from "../components/Card";
@@ -21,7 +21,7 @@ LocaleConfig.locales['br'] = {
     'Novembro',
     'Dezembro'
   ],
-  monthNamesShort: ['Jan.', 'Fev.', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul.', 'Ago', 'Set', 'Out', 'Nov', 'Dec'],
+  monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
   dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
   dayNamesShort: ['Dom', 'Seg', 'Ter', 'Quar', 'Qui', 'Sex', 'Sab'],
   today: "Hoje"
@@ -30,54 +30,89 @@ LocaleConfig.locales['br'] = {
 LocaleConfig.defaultLocale = 'br';
 
 const Calendario = () => {
-  const [date, setDate] = useState("");
   const [list, setList] = useState();
   const token = useSelector((state) => state.authReducer.token);
-  const currentDate = new Date();
+  const [currentDate, setDate] = useState(new Date().toLocaleDateString('en-GB'));
+  const [selected, setSelected] = useState('');
 
-  const handleGetList = async (date) => {
-      const response = await getList(token, date);
+  const requestList = async () => {
+    try {
+        const response = await getList(token, currentDate);
 
-      setList(response);
+        setList(response["horariosMedicamentos"]);
+
+    } catch(error) {
+        console.warn(error.message);
+    }
   }
+    useEffect(() => {
+        requestList();
+    }, [])
 
-  useEffect(() => {
-      setDate(`${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`);
-      handleGetList(date);
-   
-  }, [])
-
-  console.warn(date);
-  console.warn(list);
-
+    
     return ( 
         
         <View style={{backgroundColor: '#ffff', width: '100%', height: '100%'}}>
             <Calendar 
-        onDayPress={(day) => {
-          
-        markedDay = day.dateString;
-        
-        }}
+              onDayPress={(day) => {
+                setSelected(day.dateString);
+                requestList(new Date(day.dateString).toLocaleDateString('en-GB', {timeZone: 'UTC'}))
+                setDate(new Date(day.dateString).toLocaleDateString('en-GB', {timeZone: 'UTC'}));
+              }}
 
-        theme={{
-          dayTextColor: '#717F7F',
-          monthTextColor: '#094275',
-          textMonthFontWeight: 'bold',
-          weekRextColor: '#717F7F',
-          textWeekFontWeight: 600,
-          arrowColor: '#094275',
-          selectedDotColor: '#094275',
+              markedDates={{
+                [selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}
+              }}
 
-
-        }}    
+              theme={{
+                dayTextColor: '#717F7F',
+                monthTextColor: '#094275',
+                textMonthFontWeight: 'bold',
+                weekRextColor: '#717F7F',
+                textWeekFontWeight: 600,
+                arrowColor: '#094275',
+                selectedDotColor: '#094275',
+              }}    
             />
 
-        <CardCalendar data="13 de março" medInfo='Prednisona: 8:30 (ingerido) / 22:30 (ingerido)'/>
-                  
-        </View>
-            
+            <View style={style.cardCalendar}>
+              <Text style={style.title}>{currentDate}</Text>
+            {
+              list ? (
+                list.map((list) => (
+                  <CardCalendar
+                    nome={list.nome}
+                    hora={list.horario}
+                  />
+                ))
+              ) : (
+                <Text>Nenhum relatório para esta data</Text>
+              )
+            }
+            </View>
+
+        </View> 
     )
 }
+
+const style =  StyleSheet.create({
+  cardCalendar: {
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: '#F1F5F4',
+    borderRadius: 10,
+    width: 300,
+    height: 230,
+    marginTop: 60,
+    marginLeft: 60,
+    padding: 15
+},
+
+title: {
+  fontWeight: 800,
+  fontSize: 17
+}
+
+})
 
 export default Calendario;

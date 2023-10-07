@@ -8,6 +8,7 @@ import Dashboard from './src/pages/Dashboard.jsx';
 import Calendario from './src/pages/Calendario.jsx';
 import Configuracoes from './src/pages/Configuracoes.jsx';
 import Listagem from './src/pages/Listagem.jsx';
+import { CardList } from './src/components/Card.jsx';
 import { Image } from 'react-native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from '@react-navigation/native';
@@ -28,6 +29,7 @@ const SubScreens = () => {
       <Stack.Screen name='Adicionar' component={Adicionar} options={{headerShown: false}}/>
       <Stack.Screen name='Atualizacao' component={Atualizacao} options={{headerShown: false}}/>
       <Stack.Screen name='AtualizaMed' component={AtualizarMed} options={{headerShown: false}}/>
+      <Stack.Screen name='card' component={CardList} options={{headerShown: false}}/>
     </Stack.Navigator>
   )
 }

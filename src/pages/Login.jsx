@@ -13,49 +13,53 @@ const Login = ({navigation}) => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [error, setError] = useState("");
-  
-  const  handleLogin = async () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
-    
-    setError('');
-    setEmail(email.trim());
-    setSenha(senha.trim());
-    
-    try {
 
-      if (email === '' || email === null) {
-        throw new Error("*Digite seu Email!");
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
 
-    } else if (senha === '' || senha === null) {
-      throw new Error("*Digite sua senha !");
+  const validateEmail = () => {
+    setEmail(email.trim())
 
+    if (!email) {
+      throw new Error("*Digite seu Email!");
+      
     } else if (!emailRegex.test(email)) {
       throw new Error("*Email inválido!");
-
-    } else {
-      
-      const request = await authenticateUser(email, senha);
-      console.warn(request)
-      
-      if (request) {
-          const users = await getUsers();
-          const user = users?.users?.find((u) => u.email === email);
-
-          dispatch(userActions.setUser(user))
-          dispatch(setAuthToken(request));
-
-          navigation.push("MainScreens");
-
-          } else {
-              throw new Error("*Usuário inválido!");
-          }
     }
-    
-    } catch(error) {
-    
+  };
+
+  const validateSenha = () => {
+    setSenha(senha.trim())
+
+    if (!senha) {
+      throw new Error("*Digite sua senha!");
+    }
+  };
+
+  
+  const  handleLogin = async () => {
+  
+    setError('');
+
+    try {
+      
+      validateEmail();
+      validateSenha();
+
+      const request = await authenticateUser(email, senha);
+
+      if (request.status === 200) {
+        const users = await getUsers();
+        const user = users?.users?.find((u) => u.email === email);
+
+        dispatch(userActions.setUser(user));
+        dispatch(setAuthToken(request.token));
+
+        navigation.push("MainScreens");
+    } 
+  
+    } catch (error) {
       setError(error.message);
     }
-     
   }
   
   return (
@@ -106,15 +110,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         width: "100%",
-        height: "50%",
-        marginTop: 70,
+        height: "45%",
+        marginTop: 150,
         backgroundColor: "#fff"
     },
    
     title : {
         fontFamily: 'Montsserrat',
         color: "#094275",
-        fontSize: 24,
+        fontSize: 40,
         fontWeight: 700,
         marginTop: 10,
         marginBottom: 30
@@ -123,15 +127,15 @@ const styles = StyleSheet.create({
     input: {
         backgroundColor: '#F1F5F4',
         borderRadius: 20,
-        width: 255,
-        height: 47,
+        width: 300,
+        height: 60,
         paddingLeft: 20,
 
     },
 
     password: {
         width: "90%",
-        height: 50,
+        height: 60,
         borderColor: 'black',
         borderWidth: 2
         
@@ -140,16 +144,17 @@ const styles = StyleSheet.create({
     line: {
         borderBottomColor: '#717F7F',
         borderBottomWidth: 1,
-        marginTop: 100
+        marginTop: 160
      
     },
 
     smallText: {
         fontFamily: 'Inter',
         fontStyle: 'normal',
+        fontSize: 18,
         color: '#717F7F',
-        left: 50,
-        top: 15
+        left: 45,
+        top: 25
     }, 
 
     error : {

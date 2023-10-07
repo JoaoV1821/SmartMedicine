@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {StyleSheet, Text, View, TextInput} from "react-native";
 import AppButton from "../components/AppButton";
-import LogoEscura from "../components/Logo";
 import {postUser} from "../services/API";
 
 const Cadastro = (props) => {
@@ -64,7 +63,7 @@ const Cadastro = (props) => {
 
     return (
         <View style={style.body}>
-            <LogoEscura/>
+        
 
             <View style={style.container}>
                 <Text style={style.title}>Atualizar dados</Text>
@@ -114,14 +113,9 @@ const Cadastro = (props) => {
                 </View>
 
             </View>
-
-            <View style={style.lineBottom}></View>
-            <Text
-                style={style.smallText}
-                onPress={() => props.navigation.navigate('Login')}>Já possui uma conta? Toque para fazer login</Text>
+            
             </View>
     )
-
 }
 
 const style = StyleSheet.create({
@@ -138,7 +132,7 @@ const style = StyleSheet.create({
         justifyContent: "space-between",
         width: "100%",
         height: "60%",
-        marginTop: 25
+        marginTop: 100
     },
 
     button: {

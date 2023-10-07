@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {StyleSheet, Text, View, TextInput} from "react-native";
+import {StyleSheet, Text, View, TextInput, Alert} from "react-native";
 import AppButton from "../components/AppButton";
 import LogoEscura from "../components/Logo";
 import {postUser} from "../services/API";
@@ -13,17 +13,22 @@ const Cadastro = (props) => {
     const [resp, setResp] = useState("");
     const [contatoResp, setContato] = useState("");
 
+    const sanitizePhoneNumber = (number) => {
+        number = number.replace(/[-()]/g, '');
+        return number
+      }
+
     const handleSubmit = async () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
-        const celRegex = /^(\+55|00\s?55\s?)?(\(?\d{2}\)?\s?)?(9\d{4}[-.\s]?\d{4}|[2-9]\d{3}[-.\s]?\d{4})$/i
+        const celRegex = new RegExp('[0-9]{2}9[0-9]{8}')
 
         setError("");
         setNome(nome.trim());
         setEmail(email.trim());
-        setCelular(celular.trim());
+        setCelular(sanitizePhoneNumber(celular.trim()));
         setSenha(senha.trim());
         setResp(resp.trim());
-        setContato(contatoResp.trim());
+        setContato(sanitizePhoneNumber(contatoResp.trim()));
 
       try {
         if ( nome === "" || nome === null) {
@@ -38,11 +43,14 @@ const Cadastro = (props) => {
           } else if (celular === "" || celular === null || contatoResp === "" || contatoResp === null) {
             throw new Error("*Digite o número de celular!");
     
-          } else if (!celRegex.test(celular) || !celRegex.test(contatoResp)) {
-            throw new Error ("*Número inválido!");
+          } else if (celular.length > 11 || celular.length < 11 || contatoResp.length < 11 || contatoResp.length > 11) {
+            throw new Error("Número de celular inválido!")
+
+          } else if (!celRegex.test(celular)) {
+            throw new Error ("*Número de  celular inválido!");
     
           } else if (senha === "" || senha === null) {
-                throw new Error("*Digite a senha!");
+            throw new Error("*Digite a senha!");
     
           } else {
 
@@ -56,12 +64,17 @@ const Cadastro = (props) => {
             }
             
             const response = await postUser(user);
-            setError(response.msg)
+            
+            if (response) {
+                Alert.alert("Usuário cadastrado com sucesso!");
+            } else if (response === 403) {
+                setError("Usuário já cadastrado!");
+            }
       }
 
        
       } catch (error) {
-        console.warn(error)
+        setError(error.message);
       }
     }
 
@@ -141,7 +154,7 @@ const style = StyleSheet.create({
         justifyContent: "space-between",
         width: "100%",
         height: "60%",
-        marginTop: 25
+        marginTop: 100
     },
 
     button: {
@@ -178,7 +191,8 @@ const style = StyleSheet.create({
         fontFamily: 'Inter',
         fontStyle: 'normal',
         color: '#717F7F',
-        left: 50,
+        fontSize: 18,
+        left: 40,
         top: 15
 
     },

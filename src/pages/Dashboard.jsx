@@ -2,15 +2,12 @@ import React from "react";
 import { StyleSheet, Text, View, SafeAreaView, Image} from "react-native";
 import {Card, CardMiddle} from "../components/Card.jsx";
 import { useSelector } from 'react-redux';
-import axios from "axios";
 
 const Dashboard = () => {
   
 
    const currentUser = useSelector(state => state.currentUser);
    const authToken = useSelector((state) => state.authReducer);
-
-   console.warn(authToken);
 
    const handleFirstName = (name) => {
       return name.split(" ")[0];
@@ -32,9 +29,9 @@ const Dashboard = () => {
       </View>
 
       <View style={style.cards}>
-         <CardMiddle title='Esquecimentos' msg='3'/>
+         <CardMiddle title='Esquecimentos' msg='2'/>
          <CardMiddle title='Medicamento mais esquecido' msg='Topiramato'/> 
-         <CardMiddle title='Total de medicamentos' msg="3"/>
+         <CardMiddle title='Total de medicamentos' msg="2"/>
          <CardMiddle title='Frequência' msg="30 dias"/>
       </View>
         
@@ -59,6 +56,7 @@ const style = StyleSheet.create({
       flexDirection: 'column',
       justifyContent: 'space-around',
       marginLeft: 20,
+      marginTop: 30
       
    },
 
@@ -68,7 +66,7 @@ const style = StyleSheet.create({
       justifyContent: 'space-between',
       alignItems: 'center',
       marginLeft: 20,
-      marginTop: 50,
+      marginTop: 100,
       marginBottom: 15
    },
 
@@ -78,7 +76,7 @@ const style = StyleSheet.create({
       flexWrap: 'wrap',
       justifyContent: 'space-around',
       marginRight: 10,
-      marginTop: 10
+      marginTop: 50
    },
 
    footer : {
