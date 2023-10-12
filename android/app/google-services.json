@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "48985928433",
+    "project_id": "smartmedicine-8400e",
+    "storage_bucket": "smartmedicine-8400e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48985928433:android:a560ed3759f79b4a872f50",
+        "android_client_info": {
+          "package_name": "com.producao"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDA9SavkZ61Gpu1SwsWLO1tfRtvsjVjiOs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { StyleSheet, Text, View, SafeAreaView, Image} from "react-native";
 import {Card, CardMiddle} from "../components/Card.jsx";
+import { handleSetReminder } from "../services/notification.js";
 import { useSelector } from 'react-redux';
 
 const Dashboard = () => {
@@ -14,7 +15,7 @@ const Dashboard = () => {
    }
    
    const firstName = handleFirstName(currentUser.user.nome);
-
+   
    return (
     <SafeAreaView style={{backgroundColor: 'white', width: '100%', height: '100%'}}>
       

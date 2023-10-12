@@ -11,11 +11,34 @@ export const getUsers = async () => {
     return json;
 };
 
+export const updateUsers = async (object, token) => {
+  const response = await instance.put('/user/updateUser',
+
+    {
+      "email": object.email,
+      "nome" : object.nome,
+      "telefone": object.celular,
+      "nome_responsavel": object.nomeResp,
+      "contato_responsavel": object.contatoResp
+    },
+
+    {
+      headers: {
+        "x-access-token": token
+      }
+    }
+    
+  )
+
+  return response
+}
+
 export const getMedicines = async (token) => {
     const response = await instance.get("/medicamentos/listAll", {
 
       headers:{ 
-        "x-access-token": `${token}`
+        "x-access-token": `${token}`,
+        "Content-Type": 'application/json'
       }
 
     });
@@ -49,10 +72,10 @@ export const postUser = async (object) => {
       data: {
           "email": object.email,
           "nome": object.nome,
-          "telefone": object.celular,
+          "telefone": parseInt(object.celular),
           "senha": object.senha,
           "nome_responsavel": object.nomeResp,
-          "contato_responsavel": object.contatoResp
+          "contato_responsavel": parseInt(object.contatoResp)
       }
     },
     { 
@@ -85,8 +108,8 @@ export const postMedicine = async (object, token) => {
     }, 
     {
       headers: {
-        'content-type': 'application/json',
-        "x-access-token": token
+        "x-access-token": token,
+        'content-type': 'application/x-www-form-urlencoded'
       } 
     }
   )

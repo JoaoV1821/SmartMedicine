@@ -32,7 +32,7 @@ LocaleConfig.defaultLocale = 'br';
 const Calendario = () => {
   const [list, setList] = useState();
   const token = useSelector((state) => state.authReducer.token);
-  const [currentDate, setDate] = useState(new Date().toLocaleDateString('en-GB'));
+  const [currentDate, setDate] = useState(new Date().toLocaleDateString('en-GB', {timeZone: 'UTC'}));
   const [selected, setSelected] = useState('');
 
   const requestList = async () => {
@@ -49,15 +49,14 @@ const Calendario = () => {
         requestList();
     }, [])
 
-    
     return ( 
         
         <View style={{backgroundColor: '#ffff', width: '100%', height: '100%'}}>
             <Calendar 
               onDayPress={(day) => {
                 setSelected(day.dateString);
-                requestList(new Date(day.dateString).toLocaleDateString('en-GB', {timeZone: 'UTC'}))
-                setDate(new Date(day.dateString).toLocaleDateString('en-GB', {timeZone: 'UTC'}));
+                setDate(new Date(day.dateString).toLocaleDateString('pt-br', {timeZone: 'UTC'}));
+                requestList()
               }}
 
               markedDates={{
@@ -76,7 +75,7 @@ const Calendario = () => {
             />
 
             <View style={style.cardCalendar}>
-              <Text style={style.title}>{currentDate}</Text>
+              <Text style={style.title}>{`${currentDate}`}</Text>
             {
               list ? (
                 list.map((list) => (

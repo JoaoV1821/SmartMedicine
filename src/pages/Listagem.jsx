@@ -16,7 +16,7 @@ const Listagem = (props) => {
         setSearchQuery(text);
     
         const filtered = medicines.filter((medicamento) =>
-            medicamento.nome.toLowerCase().includes(text.toLowerCase())
+            medicamento.nome.toLowerCase().startsWith(text.toLowerCase())
         );
     
         setFilteredMedicines(filtered);

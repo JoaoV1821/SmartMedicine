@@ -9,7 +9,7 @@ const handleDelete =  async (id, token) =>
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      {text: 'Sim', onPress: () => deleteMedicine(id, token)},
+      {text: 'Sim', onPress: () => deleteMedicine(id, token), },
     ]);
 
 

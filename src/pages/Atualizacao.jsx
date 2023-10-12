@@ -1,26 +1,30 @@
 import React, { useState } from "react";
-import {StyleSheet, Text, View, TextInput} from "react-native";
+import {StyleSheet, Text, View, TextInput, Alert} from "react-native";
 import AppButton from "../components/AppButton";
-import {postUser} from "../services/API";
+import { useSelector } from "react-redux";
+import { updateUsers } from "../services/API";
 
-const Cadastro = (props) => {
+const Atualizacao = () => {
+
+    const currentUser = useSelector(state => state.currentUser);
+    const token = useSelector(state => state.authReducer.token );
     const [error, setError] = useState("");
-    const [nome, setNome] = useState("");
-    const [email, setEmail] = useState("");
-    const [celular, setCelular] = useState("");
-    const [senha, setSenha] = useState("");
-    const [resp, setResp] = useState("");
-    const [contatoResp, setContato] = useState("");
+    const [nome, setNome] = useState(currentUser.user.nome);
+    const [celular, setCelular] = useState(`${currentUser.user.telefone}`);
+    const [resp, setResp] = useState(currentUser.user.nome_responsavel);
+    const [contatoResp, setContato] = useState(`${currentUser.user.contato_responsavel}`);
 
+    const handleUpdate = async (user) => {
+        const response = await updateUsers(user, token);
+        return response;
+    }
+   
     const handleSubmit = async () => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
         const celRegex = /^(\+55|00\s?55\s?)?(\(?\d{2}\)?\s?)?(9\d{4}[-.\s]?\d{4}|[2-9]\d{3}[-.\s]?\d{4})$/i
 
         setError("");
         setNome(nome.trim());
-        setEmail(email.trim());
         setCelular(celular.trim());
-        setSenha(senha.trim());
         setResp(resp.trim());
         setContato(contatoResp.trim());
 
@@ -28,34 +32,31 @@ const Cadastro = (props) => {
         if ( nome === "" || nome === null) {
             throw new Error("*Digite seu nome!");
     
-          } else if (email === "" || email === null) {
-            throw new Error("*Digite seu email !");
-    
-          } else if (!emailRegex.test(email)) {
-            throw new Error ("*Email inválido!");
-    
           } else if (celular === "" || celular === null || contatoResp === "" || contatoResp === null) {
             throw new Error("*Digite o número de celular!");
     
           } else if (!celRegex.test(celular) || !celRegex.test(contatoResp)) {
             throw new Error ("*Número inválido!");
     
-          } else if (senha === "" || senha === null) {
-                throw new Error("*Digite a senha!");
-    
           } else {
 
             const user = {
-                email: email,
+                email: currentUser.user.email,
                 nome: nome,
                 celular: celular,
                 nomeResp: resp,
                 contatoResp: contatoResp
             }
-            await postUser(user);
-      }
 
-       
+            const response = handleUpdate(user);
+
+            if (response) {
+                Alert.alert("Atualização realizada com sucesso!");
+            } else {
+                Alert.alert("Erro ao atualizar");
+            }
+      }
+  
       } catch (error) {
         setError(error.message)
       }
@@ -68,48 +69,43 @@ const Cadastro = (props) => {
             <View style={style.container}>
                 <Text style={style.title}>Atualizar dados</Text>
                 {error ? <Text style={style.error}>{error}</Text> : null}
+
                 <TextInput
                     placeholder="Nome"
                     style={style.input}
-                    onChangeText={text => setNome(text)}></TextInput>
-
-                <View style={style.line}></View>
-                <TextInput
-                    placeholder="Email"
-                    style={style.input}
-                    keyboardType="email-address"
-                    onChangeText={text => setEmail(text)}></TextInput>
+                    value={nome}
+                    onChangeText={(text) => setNome(text)}>   
+                </TextInput>
 
                 <View style={style.line}></View>
                 <TextInput
                     placeholder="Celular"
                     style={style.input}
                     keyboardType="phone-pad"
-                    onChangeText={text => setCelular(text)}></TextInput>
-
-                <View style={style.line}></View>
-                <TextInput
-                    placeholder="Senha"
-                    style={style.input}
-                    secureTextEntry={true}
-                    onChangeText={text => setSenha(text)}></TextInput>
+                    value={celular}
+                    onChangeText={(text) => setCelular(text)}
+                    ></TextInput>
 
                 <View style={style.line}></View>
                 <TextInput
                     placeholder="Nome do responsável"
                     style={style.input}
-                    onChangeText={text => setResp(text)}></TextInput>
+                    value={resp}
+                    onChangeText={(text) => setResp(text)}
+                    ></TextInput>
 
                 <View style={style.line}></View>
                 <TextInput
                     placeholder="Contato do responsável"
                     style={style.input}
                     keyboardType="phone-pad"
+
+                    value={contatoResp}
                     onChangeText={text => setContato(text)}></TextInput>
 
                 <View style={style.line}></View>
                 <View style={style.button}>
-                    <AppButton title='Cadastrar' onPress={handleSubmit}/>
+                    <AppButton title='Atualizar' onPress={handleSubmit}/>
                 </View>
 
             </View>
@@ -184,4 +180,4 @@ const style = StyleSheet.create({
       }
 })
 
-export default Cadastro;
+export default Atualizacao;

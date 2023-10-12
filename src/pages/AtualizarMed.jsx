@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import AppButton from "../components/AppButton";
 import { updateMedicine } from "../services/API";
 
-
 const AtualizaMed = () => {
     const email = useSelector(state => state.currentUser.user.email);
     const token = useSelector(state => state.authReducer.token);

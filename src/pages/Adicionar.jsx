@@ -1,20 +1,25 @@
 import React, { useState } from "react";
 import {StyleSheet, Text, View, TextInput, Alert} from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import AppButton from "../components/AppButton";
+import { SmallButton } from "../components/AppButton";
 import { useSelector } from 'react-redux';
 import { postMedicine } from "../services/API";
+import DatePicker from 'react-native-date-picker'
 
 const Adicionar = () => {
-    const email = useSelector(state => state.currentUser.user.email);
     const token = useSelector(state => state.authReducer.token);
     const [nome, setNome] = useState("");
     const [error, setError] = useState("");
     const [doses, setDoses] = useState("");
-    const [posologia, setPosologia] = useState("");
-    const [periodo, setPeriodo] = useState("");
-    const [data, setData] = useState("");
-    const [hora, setHora] = useState("");
-    const [response, setResponse] = useState("");
+    const [response, setResponse] = useState({});
+    const [selectedPeriod, setSelectedPeriod] = useState("Uso contínuo");
+    const [selectedPosologia, setSelectedPosologia] = useState("6");
+    const [hour, setHour] = useState("")
+    const [open, setOpen] = useState(false)
+    const posologiaOptions = ["6", "8", "12", "24"]
+    const periodoOptions = ["Uso contínuo", "7", "15", "30"];
+    const data = new Date();
 
     const handlePost = async  (medicines) => {
         try {
@@ -27,56 +32,50 @@ const Adicionar = () => {
     }
     
     const handleSubmit = async () => {
-       
+        
         setError("");
         setNome(nome.trim());
         setDoses(doses.trim());
-        setPosologia(posologia.trim());
-        setPeriodo(periodo.trim());
-        setHora(hora.trim());
 
+        let usoContinuoValue = "0";
+        let periodo = "";
+        
       try {
         
         if ( nome === "" || nome === null) {
             throw new Error("*Digite o nome do medicamento!");
     
+          } else if (hour === "" || hour === null) {
+            throw new Error("*Selecione a hora de inicio !");
+
           } else if (doses === "" || doses === null) {
             throw new Error("*Digite a quatidade de doses!");
     
-          } else if (posologia === "" || posologia === null) {
-            throw new Error("*Digite a posologia do medicamento!");
-    
-          } else if (periodo === "" || periodo === null) {
-                throw new Error("*Digite o perido de uso do medicamento!");
-
           } else {
+        
+            if (selectedPeriod === "Uso contínuo") {
+                usoContinuoValue = "1";
+    
+            } else {
+                periodo = selectedPeriod;
+            }
 
-            let usoContinuoValue = 0;
-            let periodoValue = periodo
-
-            if (periodo === "uso") {
-                usoContinuoValue = 1
-                periodoValue = ""
-            } 
-                
             const medicamento = {
-                "userEmail": email,
                 "nome": nome ,
                 "doses": doses,
-                "posologia": posologia, 
-                "periodo": periodoValue,
-                "data": data,
-                "hora_inicio": hora,
+                "posologia": selectedPosologia, 
+                "periodo": periodo,
+                "data": new Date(`${data.getFullYear()}-${data.getMonth() + 1}-${data.getDate()}`).toLocaleDateString('en-GB', {timeZone: 'UTC'}),
+                "hora_inicio": hour,
                 "uso_continuo": usoContinuoValue
             }
 
             handlePost(medicamento);
 
-            if (response) {
+            if (response.status === 201) {
                 Alert.alert("Medicamento cadastrado!");
-            } else {
-                
-                Alert.alert("Erro ao cadastrar!");
+            } else  {
+                Alert.alert(response.data.msg);
             }
           }
        
@@ -97,16 +96,52 @@ const Adicionar = () => {
              <TextInput placeholder="Doses" style={style.input} onChangeText={text => setDoses(text)}></TextInput>
 
              <View style={style.line}></View>
-             <TextInput placeholder="Posologia" style={style.input} onChangeText={text => setPosologia(text)}></TextInput>
+             <View style={style.pickerContainer}>
+                <TextInput placeholder="Posologia"></TextInput>
+                <Picker
+                    style={style.picker}
+                    selectedValue={selectedPosologia}
+                    onValueChange={(itemValue) => setSelectedPosologia(itemValue)}
+                >
+                    {posologiaOptions.map((option, index) => (
+                        <Picker.Item key={index} label={option} value={option.toString()} />
+                    ))}
+                </Picker>
+             </View>
 
              <View style={style.line}></View>
-             <TextInput placeholder="Período" style={style.input} onChangeText={text => setPeriodo(text)}></TextInput>
-
+             <View style={style.pickerContainer}>
+                <TextInput placeholder="Período"></TextInput>
+                <Picker
+                    style={style.picker}
+                    selectedValue={selectedPeriod}
+                    onValueChange={(itemValue) => setSelectedPeriod(itemValue)}
+                >
+                    {periodoOptions.map((option, index) => (
+                        <Picker.Item key={index} label={option} value={option.toString()} />
+                    ))}
+                </Picker>
+             </View>
+        
              <View style={style.line}></View>
-             <TextInput placeholder="Data início" style={style.input} onChangeText={text => setData(text)}></TextInput>
-
-             <View style={style.line}></View>
-             <TextInput placeholder="Hora início" style={style.input} onChangeText={text => setHora(text)}></TextInput>
+             <View style={style.pickerContainer}>
+                <TextInput placeholder="Hora início"></TextInput>
+                <SmallButton title="Selecionar" onPress={() => setOpen(true)} />
+                <DatePicker
+                    modal
+                    open={open}
+                    date={data}
+                    mode="time"
+                    onConfirm={(date) => {
+                    setOpen(false)
+                    setHour(date)
+                    }}
+                    onCancel={() => {
+                    setOpen(false)
+                    }}
+                />
+             </View>
+            
 
              <View style={style.line}></View>
              <View style={style.button}>
@@ -182,7 +217,26 @@ const style = StyleSheet.create({
         right: 50,
         top: 15,
         marginBottom: 10
-      }
+      },
+
+      picker: {
+        width: 190,
+        height: 5,
+        fontSize : 10,
+        left: 30,
+
+        borderWidth: 1,
+        borderColor: "#206199",
+        borderRadius: 4,
+        marginTop: 10,
+    }, 
+
+    pickerContainer: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center"
+    }
+    
 })
 
 export default Adicionar;
