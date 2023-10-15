@@ -135,16 +135,16 @@ export const updateMedicine = async (id, token, object) => {
   
     {
       "nome": object.nome,
-      "uso_continuo": 0,
+      "uso_continuo": object.uso_continuo,
       "qtd_dose": object.doses,
       "posologia": object.posologia,
-      "data_inicio": object.data,
       "periodo_dias": object.periodo,
       "horario_inicio": object.hora_inicio
     }, 
     {
       headers: {
-        "x-access-token": token
+        "x-access-token": token,
+        'content-type': 'application/x-www-form-urlencoded'
       }
     }
   )

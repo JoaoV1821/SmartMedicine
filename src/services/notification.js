@@ -1,25 +1,30 @@
-import PushNotification from 'react-native-push-notification';
+import notifee, { TriggerType } from '@notifee/react-native';
 
-// Configure as notificações
-PushNotification.configure({
-  onNotification: function (notification) {
-    // Lógica para lidar com a notificação quando ela for exibida
-  },
-  popInitialNotification: true,
-  requestPermissions: true,
-});
+export const onCreateTriggerNotification = async (nome, hora, minuto) => {
 
-// Função para agendar uma notificação
-const scheduleNotification = (userName, medicineName) => {
-  PushNotification.localNotificationSchedule({
-    title: 'Lembrete de Medicamento',
-    message: `Olá, ${userName}! Não se esqueça de tomar o medicamento ${medicineName}.`,
-    date: "2023-11-10", // Defina a data e hora para quando o lembrete deve aparecer
-  });
-};
+  const channelId = await notifee.createChannel({
+     id: 'default',
+     name: 'Default Channel',
+  });  
 
-// Chame a função de agendamento de notificação quando o botão for pressionado
-export const handleSetReminder = (userName, medicineName) => {
-  scheduleNotification(userName, medicineName);
-};
+  const date = new Date(Date.now());
 
+  date.setHours(hora);
+  date.setMinutes(minuto);
+
+  const trigger = {
+    type: TriggerType.TIMESTAMP,
+    timestamp: date.getTime(), 
+  };
+
+  await notifee.createTriggerNotification(
+     {
+       title: 'Hora de tomar seu medicamento',
+       body: `${nome}: ${date.getHours()}:${date.getMinutes()}`,
+       android: {
+         channelId: channelId,
+       },
+     },
+     trigger,
+   );
+ }

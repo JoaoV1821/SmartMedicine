@@ -4,8 +4,8 @@ import AppButton from "../components/AppButton";
 import { useSelector } from "react-redux";
 import { updateUsers } from "../services/API";
 
-const Atualizacao = () => {
 
+const Atualizacao = () => {
     const currentUser = useSelector(state => state.currentUser);
     const token = useSelector(state => state.authReducer.token );
     const [error, setError] = useState("");
@@ -61,7 +61,7 @@ const Atualizacao = () => {
         setError(error.message)
       }
     }
-
+  
     return (
         <View style={style.body}>
         

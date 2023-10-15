@@ -71,11 +71,11 @@ const Adicionar = () => {
             }
 
             handlePost(medicamento);
-
-            if (response.status === 201) {
+            
+            if (response) {
                 Alert.alert("Medicamento cadastrado!");
             } else  {
-                Alert.alert(response.data.msg);
+                Alert.alert("error");
             }
           }
        
