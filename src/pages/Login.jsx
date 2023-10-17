@@ -99,73 +99,66 @@ const Login = ({navigation}) => {
 
 const styles = StyleSheet.create({
 
-    body: {
-        backgroundColor: "#fff",
-        height: "100%"
-    },
+  body: {
+      backgroundColor: "#fff",
+      height: "100%"
+  },
 
-    container : {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: "100%",
-        height: "45%",
-        marginTop: 150,
-        backgroundColor: "#fff"
-    },
+  container : {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: "center",
+      justifyContent: "space-between",
+      width: "100%",
+      height: "50%",
+      marginTop: 70,
+      backgroundColor: "#fff"
+  },
+ 
+  title : {
+      fontFamily: 'Montsserrat',
+      color: "#094275",
+      fontSize: 24,
+      fontWeight: 700,
+      marginTop: 10,
+      marginBottom: 30
+  },
+  
+  input: {
+      backgroundColor: '#F1F5F4',
+      borderRadius: 20,
+      width: 255,
+      height: 47,
+      paddingLeft: 20,
+
+  },
+
+  password: {
+      width: "90%",
+      height: 50,
+      borderColor: 'black',
+      borderWidth: 2
+      
+  },
+
+  line: {
+      borderBottomColor: '#717F7F',
+      borderBottomWidth: 1,
+      marginTop: 100
    
-    title : {
-        fontFamily: 'Montsserrat',
-        color: "#094275",
-        fontSize: 40,
-        fontWeight: 700,
-        marginTop: 10,
-        marginBottom: 30
-    },
-    
-    input: {
-        backgroundColor: '#F1F5F4',
-        borderRadius: 20,
-        width: 300,
-        height: 60,
-        paddingLeft: 20,
+  },
 
-    },
-
-    password: {
-        width: "90%",
-        height: 60,
-        borderColor: 'black',
-        borderWidth: 2
-        
-    },
-    
-    line: {
-        borderBottomColor: '#717F7F',
-        borderBottomWidth: 1,
-        marginTop: 160
-     
-    },
-
-    smallText: {
-        fontFamily: 'Inter',
-        fontStyle: 'normal',
-        fontSize: 18,
-        color: '#717F7F',
-        left: 45,
-        top: 25
-    }, 
-
-    error : {
+  smallText: {
       fontFamily: 'Inter',
       fontStyle: 'normal',
-      color: 'red',
-      right: 50,
-      top: 15,
-      marginBottom: 10
-    }
+      color: '#717F7F',
+      left: 50,
+      top: 15
+
+  }, 
+
 });
+
 
 
 export default Login;

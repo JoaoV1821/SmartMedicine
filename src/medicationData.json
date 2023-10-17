@@ -1,0 +1,28 @@
+[
+    {
+      "data": "17/10/2023",
+      "hora": "12:00",
+      "nome": "Ibuprofeno",
+      "ingested": true
+    },
+    {
+      "data":"17/10/2023",
+      "hora": "12:00",
+      "nome": "Acetaminophen",
+      "ingerido": false
+    },
+
+    {
+      "data": "16/10/2023",
+      "hora": "12:00",
+      "nome": "Topiramato",
+      "ingerido": false
+    },
+    {
+      "data":"16/10/2023",
+      "hora": "12:00",
+      "nome": "Loratadina",
+      "ingerido": true
+    }
+]
+  

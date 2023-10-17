@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, Image, TouchableHighlight, Alert} from "react-native";
+import { StyleSheet, View, Text, Image, TouchableHighlight, Alert, ScrollView} from "react-native";
 import { deleteMedicine } from "../services/API";
 
 const handleDelete =  async (id, token) =>
@@ -57,8 +57,8 @@ export const CardList = (props) => {
 export const CardCalendar = (props) => {
     return (
         <View>
-                <Text>Medicamento: {props.nome}</Text>
-                <Text>Horário: {props.hora}</Text>
+                <Text>{props.nome}: {props.hora} ({props.ingerido})</Text>
+     
         </View>
     )
 }
@@ -86,7 +86,7 @@ const style = StyleSheet.create({
     },
 
     title: {
-        fontWeight: 700,
+        fontWeight: 600,
     },
 
     cardMiddle : {
@@ -94,8 +94,8 @@ const style = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: '#F1F5F4',
         borderRadius: 10,
-        width: 200,
-        height: 100,
+        width: 130,
+        height: 90,
         marginBottom: 20,
         shadowColor: 'black',
         shadowOpacity: 0.9,
@@ -129,4 +129,3 @@ const style = StyleSheet.create({
     }
 
 });
-

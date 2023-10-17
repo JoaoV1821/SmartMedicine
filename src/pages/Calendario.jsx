@@ -3,8 +3,8 @@ import { View, Text, StyleSheet} from "react-native";
 import { Calendar } from "react-native-calendars";
 import { LocaleConfig } from 'react-native-calendars';
 import { CardCalendar } from "../components/Card";
-import { getList } from "../services/API";
-import { useSelector } from "react-redux";
+
+const listaMedicamentos = require('../medicationData.json');
 
 LocaleConfig.locales['br'] = {
   monthNames: [
@@ -31,32 +31,27 @@ LocaleConfig.defaultLocale = 'br';
 
 const Calendario = () => {
   const [list, setList] = useState();
-  const token = useSelector((state) => state.authReducer.token);
   const [currentDate, setDate] = useState(new Date().toLocaleDateString('en-GB', {timeZone: 'UTC'}));
   const [selected, setSelected] = useState('');
+  const date = new Date().toLocaleDateString('en-GB', {timeZone: 'UTC'})
 
-  const requestList = async () => {
-    try {
-        const response = await getList(token, currentDate);
-
-        setList(response["horariosMedicamentos"]);
-
-    } catch(error) {
-        console.warn(error.message);
-    }
+  const filterDate = (day) => {
+   const filterMed = listaMedicamentos.filter((med) => med['data'] === day);
+    setList(filterMed);
   }
     useEffect(() => {
-        requestList();
+        filterDate(date)
+    
     }, [])
 
     return ( 
-        
         <View style={{backgroundColor: '#ffff', width: '100%', height: '100%'}}>
             <Calendar 
               onDayPress={(day) => {
+                console.warn(new Date(day.dateString).toLocaleDateString('pt-br', {timeZone: 'UTC'}))
                 setSelected(day.dateString);
-                setDate(new Date(day.dateString).toLocaleDateString('pt-br', {timeZone: 'UTC'}));
-                requestList()
+                setDate(new Date(day.dateString).toLocaleDateString('pt-br', {timeZone: 'UTC'}))
+                filterDate(new Date(day.dateString).toLocaleDateString('pt-br', {timeZone: 'UTC'}))
               }}
 
               markedDates={{
@@ -81,7 +76,8 @@ const Calendario = () => {
                 list.map((list) => (
                   <CardCalendar
                     nome={list.nome}
-                    hora={list.horario}
+                    hora={list.hora}
+                    ingerido={list.ingerido == false ? "Esquecido" : "Ingerido"}
                   />
                 ))
               ) : (
@@ -101,9 +97,10 @@ const style =  StyleSheet.create({
     backgroundColor: '#F1F5F4',
     borderRadius: 10,
     width: 300,
-    height: 230,
-    marginTop: 60,
-    marginLeft: 60,
+    height: 180,
+    marginTop: 10,
+    fontSize: 10,
+    marginLeft: 40,
     padding: 15
 },
 

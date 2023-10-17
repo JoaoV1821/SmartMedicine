@@ -154,7 +154,7 @@ const style = StyleSheet.create({
         justifyContent: "space-between",
         width: "100%",
         height: "60%",
-        marginTop: 100
+        marginTop: 25
     },
 
     button: {
@@ -191,20 +191,9 @@ const style = StyleSheet.create({
         fontFamily: 'Inter',
         fontStyle: 'normal',
         color: '#717F7F',
-        fontSize: 18,
-        left: 40,
+        left: 50,
         top: 15
 
-    },
-
-    error : {
-        fontFamily: 'Inter',
-        fontStyle: 'normal',
-        color: 'red',
-        right: 50,
-        top: 15,
-        marginBottom: 10
-      }
+    }
 })
-
 export default Cadastro;
