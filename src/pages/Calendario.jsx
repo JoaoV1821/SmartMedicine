@@ -3,8 +3,18 @@ import { View, Text, StyleSheet} from "react-native";
 import { Calendar } from "react-native-calendars";
 import { LocaleConfig } from 'react-native-calendars';
 import { CardCalendar } from "../components/Card";
+import * as RNFS from 'react-native-fs';
 
-const listaMedicamentos = require('../medicationData.json');
+const readJSONFile = async () => {
+  try {
+    const content = await RNFS.readFile(`${RNFS.DocumentDirectoryPath}/medicationData.json`, 'utf8');
+    return JSON.parse(content);
+  } catch (error) {
+    console.error('Erro ao ler o arquivo JSON:', error);
+    return [];
+  }
+};
+const listaMedicamentos = readJSONFile();
 
 LocaleConfig.locales['br'] = {
   monthNames: [
@@ -33,16 +43,33 @@ const Calendario = () => {
   const [list, setList] = useState();
   const [currentDate, setDate] = useState(new Date().toLocaleDateString('en-GB', {timeZone: 'UTC'}));
   const [selected, setSelected] = useState('');
+  const [listaMedicamentos, setListMedicamentos] = useState([]);
   const date = new Date().toLocaleDateString('en-GB', {timeZone: 'UTC'})
 
   const filterDate = (day) => {
    const filterMed = listaMedicamentos.filter((med) => med['data'] === day);
     setList(filterMed);
   }
-    useEffect(() => {
-        filterDate(date)
-    
-    }, [])
+
+  useEffect(() => {
+    const readJSONFile = async () => {
+      try {
+        const content = await RNFS.readFile(`${RNFS.DocumentDirectoryPath}/medicationData.json`, 'utf8');
+        const parsedData = JSON.parse(content);
+        console.warn(parsedData)
+        setListMedicamentos(parsedData);
+      } catch (error) {
+        console.error('Erro ao ler o arquivo JSON:', error);
+      }
+    };
+
+    readJSONFile();
+  }, []);
+
+  useEffect(() => {
+      filterDate(date);
+  }, [listaMedicamentos]);
+
 
     return ( 
         <View style={{backgroundColor: '#ffff', width: '100%', height: '100%'}}>
@@ -73,11 +100,12 @@ const Calendario = () => {
               <Text style={style.title}>{`${currentDate}`}</Text>
             {
               list ? (
-                list.map((list) => (
+                list.map((item) => (
                   <CardCalendar
-                    nome={list.nome}
-                    hora={list.hora}
-                    ingerido={list.ingerido == false ? "Esquecido" : "Ingerido"}
+                    key={item.id}
+                    nome={item.nome}
+                    hora={item.horario}
+                    ingerido={item.ingeriu === true ? "Ingerido" : "Esquecido"}
                   />
                 ))
               ) : (

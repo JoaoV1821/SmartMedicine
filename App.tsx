@@ -16,6 +16,7 @@ import {createStore} from 'redux'
 import rootReducer from './src/reducers/index.js';
 import {Provider} from 'react-redux'
 
+
 const store = createStore(
   rootReducer
 )

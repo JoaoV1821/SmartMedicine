@@ -11,7 +11,6 @@ const Dashboard = () => {
    const currentUser = useSelector(state => state.currentUser);
    const [list, setList] = useState([]);
    const [medicines, setMedicines] = useState([]);
-   const [currentMed, setCurrent] = useState([]);
    const [nextMedication, setNextMedication] = useState({});
    const currentDate = new Date().toLocaleDateString('en-GB', {timeZone: 'UTC'});
 
@@ -20,8 +19,11 @@ const Dashboard = () => {
    }
 
    const handleNotify = async (nome, hora, minuto) => {
-       await onCreateTriggerNotification(nome, hora, minuto);
-   } 
+      const notificationSent = await onCreateTriggerNotification(nome, hora, minuto);
+      if (notificationSent) {
+        console.warn("Notificação enviada!");
+      }
+    }
 
    const requestMedicines = async () => {
          try {
@@ -41,29 +43,46 @@ const Dashboard = () => {
                setList(response['horariosMedicamentos']);
    
             } 
-           
-              
+
       } catch(error) {
           console.warn(error.message);
       }
     }
 
     const requestUpcoming = () => {
-      if (list.length > 0) {  
-         const now = new Date();
-         const currentTime = now.getHours() * 60 + now.getMinutes();
-         const upcomingMedications = list.filter(med => {
-         const [hour, minute] = med.horario.split(':').map(Number);
-         const medicationTime = hour * 60 + minute;
-         return medicationTime > currentTime; 
-      }); 
-
-         const nextMedication = upcomingMedications[0];
-         setCurrent(upcomingMedications);
-         setNextMedication(nextMedication);
-
-      } 
-    }
+      if (list.length > 0) {
+        const now = new Date();
+        const currentTime = now.getHours() * 60 + now.getMinutes();
+        const upcomingMedications = list.filter((med) => {
+          const [hour, minute] = med.horario.split(":").map(Number);
+          const medicationTime = hour * 60 + minute;
+          return medicationTime > currentTime;
+        });
+    
+        const nextMedication = upcomingMedications[0];
+        
+        setNextMedication(nextMedication);
+    
+        upcomingMedications.forEach((med) => {
+          if (!med.notificationSent) {
+            
+              handleNotify(
+                med.nome,
+                parseInt(med.horario.substr(0, 2)),
+                parseInt(med.horario.substr(3, 6))
+              ).then((sent) => {
+                if (sent) {
+                  const updatedList = list.map((item) =>
+                    item.nome === med.nome ? { ...item, notificationSent: true } : item
+                  );
+                  setList(updatedList);
+                }
+              });
+            
+          }
+        });
+      }
+    };
 
    const firstName = handleFirstName(currentUser.user.nome);
 
@@ -77,14 +96,14 @@ const Dashboard = () => {
       requestUpcoming();
     }, [list]);
 
-   currentMed.map((med) => handleNotify(med.nome, parseInt(med.horario.substr(0, 2)), parseInt(med.horario.substr(3, 6))))
-   
+     
+    
    return (
     <SafeAreaView style={{backgroundColor: 'white', width: '100%', height: '100%'}}>
 
       <View style={style.topSection}>
          <Text style={style.title}>Olá, {firstName}</Text>
-         <Card title="Próximo medicamento" nome={`${nextMedication.nome}`} hora={`${nextMedication.horario}`}/>
+         <Card title="Próximo medicamento" nome={nextMedication == undefined ? "Nehnum medicamento para hoje" : nextMedication.nome} hora={nextMedication == undefined ? "": nextMedication.horario}/>
       </View>
 
       <View style={style.middleSection}></View>
