@@ -14,7 +14,6 @@ const readJSONFile = async () => {
     return [];
   }
 };
-const listaMedicamentos = readJSONFile();
 
 LocaleConfig.locales['br'] = {
   monthNames: [

@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { onCreateTriggerNotification } from "../services/notification.js";
 import { getList } from "../services/API.js";
 import { getMedicines } from "../services/API.js";
+import * as RNFS from 'react-native-fs';
 
 const Dashboard = () => {
    const token = useSelector(state => state.authReducer.token);
@@ -12,10 +13,84 @@ const Dashboard = () => {
    const [list, setList] = useState([]);
    const [medicines, setMedicines] = useState([]);
    const [nextMedication, setNextMedication] = useState({});
+   const [listaMedicamentos,setListMedicamentos] = useState([]);
+   const [esquecidos, setEsquecido] = useState("");
+   const [hora, setHora] = useState('');
+   const [maisEsquecido, setMaisEsquecido] = useState("");
    const currentDate = new Date().toLocaleDateString('en-GB', {timeZone: 'UTC'});
+
+   const readJSONFile = async () => {
+      try {
+        const content = await RNFS.readFile(`${RNFS.DocumentDirectoryPath}/medicationData.json`, 'utf8');
+        const parsedData = JSON.parse(content);
+        setListMedicamentos(parsedData);
+
+      } catch (error) {
+        console.error('Erro ao ler o arquivo JSON:', error);
+      }
+    };
+
+    const getMaisEsquecido = () =>  {
+      
+      const frequencia = {};
+
+
+      for (let i = 0; i < esquecidos.length; i++) {
+         const objeto = esquecidos[i];
+         const valorProp = objeto['nome'];
+         frequencia[valorProp] = frequencia[valorProp] ? frequencia[valorProp] + 1 : 1;
+      }
+
+      let itemMaisFrequente;
+      let frequenciaMaisAlta = 0;
+
+      for (const valorProp in frequencia) {
+         if (frequencia[valorProp] > frequenciaMaisAlta) {
+            itemMaisFrequente = valorProp;
+            frequenciaMaisAlta = frequencia[valorProp];
+         }
+      }
+
+      
+      setMaisEsquecido(itemMaisFrequente);
+    
+    }
+
+
+    const getHoraEsquecida = () =>  {
+      
+      const frequencia = {};
+
+
+      for (let i = 0; i < esquecidos.length; i++) {
+         const objeto = esquecidos[i];
+         const valorProp = objeto['horario'];
+         frequencia[valorProp] = frequencia[valorProp] ? frequencia[valorProp] + 1 : 1;
+      }
+
+      let itemMaisFrequente;
+      let frequenciaMaisAlta = 0;
+
+      for (const valorProp in frequencia) {
+         if (frequencia[valorProp] > frequenciaMaisAlta) {
+            itemMaisFrequente = valorProp;
+            frequenciaMaisAlta = frequencia[valorProp];
+         }
+      }
+
+      
+      setHora(itemMaisFrequente);
+    
+    }
+  
 
    const handleFirstName = (name) => {
       return name.split(" ")[0];
+   }
+
+   const getEsquecidos = () => {
+      const filterMed = listaMedicamentos.filter((med) => med['ingeriu'] === false);
+      setEsquecido(filterMed);
    }
 
    const handleNotify = async (nome, hora, minuto) => {
@@ -87,14 +162,22 @@ const Dashboard = () => {
    const firstName = handleFirstName(currentUser.user.nome);
 
      useEffect(() => {
+   
        requestList();
        requestMedicines(); 
+       readJSONFile();
    
      }, []);
 
      useEffect(() => {
       requestUpcoming();
     }, [list]);
+
+    useEffect(() => {
+         getEsquecidos();
+         getMaisEsquecido();
+         getHoraEsquecida()
+    }, [listaMedicamentos])
 
      
     
@@ -108,10 +191,10 @@ const Dashboard = () => {
 
       <View style={style.middleSection}></View>
       <View style={style.cards}>
-        <CardMiddle title='Esquecimentos' msg='2' />
-        <CardMiddle title='Medicamento mais esquecido' msg='Topiramato' />
+        <CardMiddle title='Esquecimentos' msg={esquecidos.length} />
+        <CardMiddle title='Medicamento mais esquecido' msg={`${maisEsquecido}`} />
         <CardMiddle title='Total de medicamentos' msg={medicines.length} /> 
-        <CardMiddle title='Hora mais esquecida' msg="15:00" />
+        <CardMiddle title='Hora mais esquecida' msg={`${hora}`} />
       </View>
     </SafeAreaView>
   )
